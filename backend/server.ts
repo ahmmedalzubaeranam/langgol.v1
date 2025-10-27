@@ -1,5 +1,6 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion, Collection } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+import type { Collection } from 'mongodb';
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
