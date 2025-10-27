@@ -11,6 +11,7 @@ import nodemailer from 'nodemailer';
 dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -215,4 +216,6 @@ async function run() {
 
 run().catch(console.dir);
 
-export default app;
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});

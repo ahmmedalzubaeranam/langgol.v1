@@ -1,6 +1,6 @@
 import type { User, History } from '../types';
 
-const API_URL = '/api';
+const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5001/api';
 
 // --- API Functions ---
 
