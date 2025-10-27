@@ -3,9 +3,11 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+const cryptoModule = require('crypto');
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
+
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -67,14 +69,14 @@ async function run() {
 
 
         // Signup
-        app.post('/signup', async (req, res) => {
+        app.post('/signup', async (req: Request, res: Response) => {
             const { email, password, name, phone, address, securityQuestion, securityAnswer } = req.body;
             const existingUser = await usersCollection.findOne({ email });
             if (existingUser) {
                 return res.status(409).json({ error: 'User already exists' });
             }
             const hashedPassword = await bcrypt.hash(password, 10);
-            const verificationCode = crypto.randomBytes(3).toString('hex').toUpperCase(); // 6-character code
+            const verificationCode = cryptoModule.randomBytes(3).toString('hex').toUpperCase(); // 6-character code
 
             const newUser = {
                 email,
@@ -99,7 +101,7 @@ async function run() {
                 html: `<b>Your verification code is: ${verificationCode}</b>`
             };
 
-            transporter.sendMail(mailOptions, (error, info) => {
+            transporter.sendMail(mailOptions, (error: any, info: any) => {
                 if (error) {
                     console.log(error);
                     return res.status(500).json({ error: 'Failed to send verification email' });
@@ -110,7 +112,7 @@ async function run() {
         });
 
         // Verify Account
-        app.post('/verify', async (req, res) => {
+        app.post('/verify', async (req: Request, res: Response) => {
             const { email, code } = req.body;
             const user = await usersCollection.findOne({ email });
             if (!user) {
@@ -125,7 +127,7 @@ async function run() {
         });
 
         // Login
-        app.post('/login', async (req, res) => {
+        app.post('/login', async (req: Request, res: Response) => {
             const { email, pass } = req.body;
             const user = await usersCollection.findOne({ email });
             if (!user) {
@@ -143,7 +145,7 @@ async function run() {
         });
 
         // Request Password Reset
-        app.post('/request-password-reset', async (req, res) => {
+        app.post('/request-password-reset', async (req: Request, res: Response) => {
             const { email } = req.body;
             const user = await usersCollection.findOne({ email });
             if (user) {
@@ -154,7 +156,7 @@ async function run() {
         });
 
         // Complete Password Reset
-        app.post('/complete-password-reset', async (req, res) => {
+        app.post('/complete-password-reset', async (req: Request, res: Response) => {
             const { email, answer, newPass } = req.body;
             const user = await usersCollection.findOne({ email });
             if (!user) {
@@ -170,7 +172,7 @@ async function run() {
             }
         });
 
-        app.put('/users/:email', async (req, res) => {
+        app.put('/users/:email', async (req: Request, res: Response) => {
             const { email } = req.params;
             const { name, phone, address } = req.body;
             const result = await usersCollection.updateOne({ email }, { $set: { name, phone, address } });
@@ -182,7 +184,7 @@ async function run() {
         });
 
         // Get All Users (Admin only)
-        app.get('/users', async (req, res) => {
+        app.get('/users', async (req: Request, res: Response) => {
             // In a real app, you'd have middleware to check for an admin user's JWT
             const users = await usersCollection.find({ isAdmin: false }).toArray();
             res.json(users);
@@ -190,13 +192,13 @@ async function run() {
 
         const historyCollection = db.collection('history');
 
-        app.post('/history', async (req, res) => {
+        app.post('/history', async (req: Request, res: Response) => {
             const { email, history } = req.body;
             await historyCollection.updateOne({ email }, { $set: { history } }, { upsert: true });
             res.json({ success: true });
         });
 
-        app.get('/history/:email', async (req, res) => {
+        app.get('/history/:email', async (req: Request, res: Response) => {
             const { email } = req.params;
             const result = await historyCollection.findOne({ email });
             if (result) {
