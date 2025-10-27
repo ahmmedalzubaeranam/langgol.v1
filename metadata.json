@@ -1,0 +1,7 @@
+{
+  "name": "Langgol - AI Agricultural Assistant",
+  "description": "An AI-powered assistant for Bangladeshi farmers, providing chat, real-time voice support, and image-based crop disease analysis in Bengali.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
