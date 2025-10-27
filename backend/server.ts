@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, Collection } = require('mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -32,8 +32,8 @@ const client = new MongoClient(uri, {
 });
 
 // Connect to MongoDB and set up collections
-let usersCollection;
-let historyCollection;
+let usersCollection: Collection;
+let historyCollection: Collection;
 
 async function connectToDatabase() {
     try {
