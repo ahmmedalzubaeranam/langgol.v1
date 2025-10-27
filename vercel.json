@@ -7,11 +7,7 @@
     },
     {
       "src": "package.json",
-      "use": "@vercel/static-build",
-      "options": {
-        "buildCommand": "vite build",
-        "outputDirectory": "dist"
-      }
+      "use": "@vercel/static-build"
     }
   ],
   "rewrites": [
