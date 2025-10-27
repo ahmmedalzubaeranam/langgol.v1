@@ -4,7 +4,8 @@
   "description": "Backend for Langgol application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node dist/server.js",
+    "build": "tsc",
     "dev": "nodemon server.ts"
   },
   "keywords": [],
