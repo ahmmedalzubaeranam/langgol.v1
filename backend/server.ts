@@ -67,7 +67,7 @@ async function run() {
 
 
         // Signup
-        app.post('/api/signup', async (req, res) => {
+        app.post('/signup', async (req, res) => {
             const { email, password, name, phone, address, securityQuestion, securityAnswer } = req.body;
             const existingUser = await usersCollection.findOne({ email });
             if (existingUser) {
@@ -110,7 +110,7 @@ async function run() {
         });
 
         // Verify Account
-        app.post('/api/verify', async (req, res) => {
+        app.post('/verify', async (req, res) => {
             const { email, code } = req.body;
             const user = await usersCollection.findOne({ email });
             if (!user) {
@@ -125,7 +125,7 @@ async function run() {
         });
 
         // Login
-        app.post('/api/login', async (req, res) => {
+        app.post('/login', async (req, res) => {
             const { email, pass } = req.body;
             const user = await usersCollection.findOne({ email });
             if (!user) {
@@ -143,7 +143,7 @@ async function run() {
         });
 
         // Request Password Reset
-        app.post('/api/request-password-reset', async (req, res) => {
+        app.post('/request-password-reset', async (req, res) => {
             const { email } = req.body;
             const user = await usersCollection.findOne({ email });
             if (user) {
@@ -154,7 +154,7 @@ async function run() {
         });
 
         // Complete Password Reset
-        app.post('/api/complete-password-reset', async (req, res) => {
+        app.post('/complete-password-reset', async (req, res) => {
             const { email, answer, newPass } = req.body;
             const user = await usersCollection.findOne({ email });
             if (!user) {
@@ -170,7 +170,7 @@ async function run() {
             }
         });
 
-        app.put('/api/users/:email', async (req, res) => {
+        app.put('/users/:email', async (req, res) => {
             const { email } = req.params;
             const { name, phone, address } = req.body;
             const result = await usersCollection.updateOne({ email }, { $set: { name, phone, address } });
@@ -182,7 +182,7 @@ async function run() {
         });
 
         // Get All Users (Admin only)
-        app.get('/api/users', async (req, res) => {
+        app.get('/users', async (req, res) => {
             // In a real app, you'd have middleware to check for an admin user's JWT
             const users = await usersCollection.find({ isAdmin: false }).toArray();
             res.json(users);
@@ -190,13 +190,13 @@ async function run() {
 
         const historyCollection = db.collection('history');
 
-        app.post('/api/history', async (req, res) => {
+        app.post('/history', async (req, res) => {
             const { email, history } = req.body;
             await historyCollection.updateOne({ email }, { $set: { history } }, { upsert: true });
             res.json({ success: true });
         });
 
-        app.get('/api/history/:email', async (req, res) => {
+        app.get('/history/:email', async (req, res) => {
             const { email } = req.params;
             const result = await historyCollection.findOne({ email });
             if (result) {
