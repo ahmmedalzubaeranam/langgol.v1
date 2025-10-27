@@ -1,12 +1,11 @@
-
-import express from 'express';
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
+const express = require('express');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const dotenv = require('dotenv');
+const nodemailer = require('nodemailer');
 
 dotenv.config();
 
@@ -216,6 +215,10 @@ async function run() {
 
 run().catch(console.dir);
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+if (!process.env.VERCEL) {
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
+}
+
+module.exports = app;
